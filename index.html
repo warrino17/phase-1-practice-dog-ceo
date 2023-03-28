@@ -25,5 +25,57 @@
 
     </ul>
 
+<script>
+  const imgUrl = "https://dog.ceo/api/breeds/image/random/4";
+  const imageContainer = document.querySelector('#dog-image-container');
+  const breedDropdown = document.querySelector('#breed-dropdown');
+  const breedList = document.querySelector('#dog-breeds');
+
+  fetch(imgUrl)
+    .then(response => response.json())
+    .then(data => {
+      data.message.forEach(imgUrl => {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        imageContainer.appendChild(img);
+      });
+    })
+    .catch(error => console.error(error));
+
+  function addBreedToList(breed) {
+    const breedItem = document.createElement('li');
+    breedItem.innerText = breed;
+    breedList.appendChild(breedItem);
+
+    breedItem.addEventListener('click', event => {
+      event.target.style.color = 'blue';
+    });
+  }
+
+  fetch("https://dog.ceo/api/breeds/list/all")
+    .then(response => response.json())
+    .then(data => {
+      const breeds = Object.keys(data.message);
+      breeds.forEach(breed => addBreedToList(breed));
+    })  
+    .catch(error => console.eeror(error));
+
+function filterBreeds(letter) {
+  const breeds = breedList.querySelectorAll('li');
+  breeds.forEach(breed => {
+    if (!breed.innerText.startsWith(letter)) {
+      breed.style.display = 'none';
+    } else {
+      breed.style.display = 'list-item';
+    }
+  });
+}
+
+  breedDropdown.addEventListener('change', event => {
+    const selectedLetter = event.target.value;
+    filterBreeds(selectedLetter);
+  });
+
+</script>
   </body>
 </html>
